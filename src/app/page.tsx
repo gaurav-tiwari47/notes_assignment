@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 type Note = {
-  _id: string;
+  id: string;
   title: string;
   content: string;
 };
@@ -25,8 +25,9 @@ export default function NotesPage() {
   }, []);
 
   const handleSubmit = async () => {
+    if(!title || !content) return;
     const method = editing ? 'PUT' : 'POST';
-    const url = editing ? `/api/notes/${editing._id}` : '/api/notes';
+    const url = editing ? `/api/notes/${editing.id}` : '/api/notes';
     await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
@@ -72,7 +73,7 @@ export default function NotesPage() {
             placeholder="Content"
           />
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600 transition duration-200"
             onClick={handleSubmit}
           >
             {editing ? 'Update Note' : 'Add Note'}
@@ -83,7 +84,7 @@ export default function NotesPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {notes.map((note) => (
             <div
-              key={note._id}
+              key={note.id}
               onClick={() => setOpenNote(note)}
               className="border rounded-lg p-4 cursor-pointer aspect-square bg-black bg-opacity-60 hover:shadow-md transition backdrop-blur-sm"
             >
@@ -102,7 +103,7 @@ export default function NotesPage() {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDelete(note._id);
+                    handleDelete(note.id);
                   }}
                   className="text-red-600"
                 >

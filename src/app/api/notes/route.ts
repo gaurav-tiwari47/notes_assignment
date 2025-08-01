@@ -1,16 +1,18 @@
-import { connectDB } from '@/lib/dbConnect';
-import { Note } from '@/model/note';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { Note, notes } from '@/model/note';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function GET() {
-  await connectDB();
-  const notes = await Note.find().sort({ createdAt: -1 });
   return NextResponse.json(notes);
 }
 
-export async function POST(req: Request) {
-  await connectDB();
-  const { title, content } = await req.json();
-  const note = await Note.create({ title, content });
-  return NextResponse.json(note);
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const newNote: Note = {
+    id: uuidv4(),
+    title: body.title,
+    content: body.content,
+  };
+  notes.push(newNote);
+  return NextResponse.json(newNote, { status: 201 });
 }

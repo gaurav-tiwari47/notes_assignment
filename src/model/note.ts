@@ -1,8 +1,7 @@
-import mongoose, { Schema, models } from 'mongoose';
+export type Note = {
+  id: string;
+  title: string;
+  content: string;
+};
 
-const NoteSchema = new Schema({
-  title: { type: String, required: true },
-  content: { type: String, required: true },
-}, { timestamps: true });
-
-export const Note = models.Note || mongoose.model('Note', NoteSchema);
+export const notes: Note[] = [];
